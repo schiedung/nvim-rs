@@ -1,10 +1,10 @@
-set directory=~/.config/nvim/temp  ""directory for .swp files
+set directory=~/.vim/temp  ""directory for .swp files
 """"""" Plugin management stuff """""""
 set nocompatible
 filetype off
 
-set rtp+=~/.config/nvim/bundle/Vundle.vim
-call vundle#begin('~/.config/nvim/bundle')
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin('~/.vim/bundle')
 
 Plugin 'VundleVim/Vundle.vim'
 "
