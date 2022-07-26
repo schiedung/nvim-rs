@@ -1,4 +1,4 @@
-set directory=~/.vim/temp  ""directory for .swp files
+"set directory=~/.vim/temp  ""directory for .swp files
 """"""" Plugin management stuff """""""
 set nocompatible
 filetype off
