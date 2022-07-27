@@ -85,7 +85,10 @@ else
   set t_Co=256
   let g:solarized_termcolors=256
   set background=dark
-  colorscheme gruvbox
+  try
+    colorscheme gruvbox
+  catch /^Vim\%((\a\+)\)\=:E185/
+  endtry
   "colorscheme solarized
   "let g:gruvbox_contrast_dark = 'hard'
   :highlight Normal ctermbg=NONE
