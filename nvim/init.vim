@@ -26,6 +26,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'petRUShka/vim-sage'
 Plugin 'rickhowe/diffchar.vim'
+Plugin 'rhysd/vim-clang-format'
 "All of your Plugins must be added before the following line
 call vundle#end()             " required!
 filetype plugin indent on     " required!
