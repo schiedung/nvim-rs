@@ -26,6 +26,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'petRUShka/vim-sage'
 Plugin 'rickhowe/diffchar.vim'
+Plugin 'rhysd/vim-clang-format'
 "All of your Plugins must be added before the following line
 call vundle#end()             " required!
 filetype plugin indent on     " required!
@@ -178,6 +179,7 @@ set tags=tags;
   let g:syntastic_cpp_compiler_options = '-std=c++20'
   let g:syntastic_cpp_checkers         = ['gcc']
   let g:syntastic_cuda_checkers        = ['nvcc']
+  let g:syntastic_cpp_config_file = '.syntastic_cpp_config'
   "let g:syntastic_cpp_flags = ['-I./lib/spdlog/ -I./lib/spdlog/include -I./lib/spdlog/include/spdlog']
   let g:syntastic_cpp_include_dirs = [ 'includes', '../include', '../../include', 'includes/*/', '../include/*/', '../../include/*/', 'external/slog/include']
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
