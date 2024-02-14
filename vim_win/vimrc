@@ -26,6 +26,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'petRUShka/vim-sage'
 Plugin 'rickhowe/diffchar.vim'
+Plugin 'rhysd/vim-clang-format'
 "All of your Plugins must be added before the following line
 call vundle#end()             " required!
 filetype plugin indent on     " required!
@@ -175,9 +176,10 @@ set tags=tags;
   let g:syntastic_cpp_check_header     = 1
   let g:syntastic_cpp_compiler         = 'clang++'
   let g:syntastic_cuda_compiler        = 'clang++'
-  let g:syntastic_cpp_compiler_options = '-std=c++20'
+  let g:syntastic_cpp_compiler_options = '-std=c++17'
   let g:syntastic_cpp_checkers         = ['gcc']
   let g:syntastic_cuda_checkers        = ['nvcc']
+  let g:syntastic_cpp_config_file      = '.syntastic_cpp_config'
   "let g:syntastic_cpp_flags = ['-I./lib/spdlog/ -I./lib/spdlog/include -I./lib/spdlog/include/spdlog']
   let g:syntastic_cpp_include_dirs = [ 'includes', '../include', '../../include', 'includes/*/', '../include/*/', '../../include/*/', 'external/slog/include']
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -190,3 +192,19 @@ set wildmode=list:longest,full
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Plugin 'rickhowe/diffchar.vim'
    let g:DiffUnit = 'Char'
+
+function! SageGnu()
+    :%s/e\^/exp/g
+    :%s/\^/**/g
+    :%s/hypergeometric((1, 1), (3\/2, 2),/hyperg1(/g
+    :%s/hypergeometric((2, 2), (5\/2, 3),/hyperg2(/g
+    :%s/chi/x/g
+    :%s/1\/2/0.5/g
+    :%s/1\/3/1.0\/3.0/g
+    :%s/2\/3/2.0\/3.0/g
+    :%s/4\/3/4.0\/3.0/g
+    :%s/3\/2/3.0\/2.0/g
+    :%s/1\/4/0.25/g
+    :%s/1\/5/0.2/g
+    :%s/1\/6/1.0\/6.0/g
+endfunction
