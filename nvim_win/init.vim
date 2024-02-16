@@ -198,13 +198,4 @@ function! SageGnu()
     :%s/\^/**/g
     :%s/hypergeometric((1, 1), (3\/2, 2),/hyperg1(/g
     :%s/hypergeometric((2, 2), (5\/2, 3),/hyperg2(/g
-    :%s/chi/x/g
-    :%s/1\/2/0.5/g
-    :%s/1\/3/1.0\/3.0/g
-    :%s/2\/3/2.0\/3.0/g
-    :%s/4\/3/4.0\/3.0/g
-    :%s/3\/2/3.0\/2.0/g
-    :%s/1\/4/0.25/g
-    :%s/1\/5/0.2/g
-    :%s/1\/6/1.0\/6.0/g
 endfunction
