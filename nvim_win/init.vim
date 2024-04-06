@@ -1,4 +1,4 @@
-"set directory=~/.config/nvim/temp  ""directory for .swp files
+set directory=~/.config/nvim/tmp  ""directory for .swp files
 """"""" Plugin management stuff """""""
 set nocompatible
 filetype off

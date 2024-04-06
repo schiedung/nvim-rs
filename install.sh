@@ -10,7 +10,7 @@ fi
 
 if [ -x "$(command -v nvim)" ];
 then
-    mkdir -p ~/.config/nvim/
+    mkdir -p ~/.config/nvim/tmp
     ln -s ${PWD}/nvim/init.vim ~/.config/nvim/init.vim
     ln -s ${PWD}/nvim/svndiff.sh ~/.config/nvim/svndiff.sh
     ln -s ${PWD}/nvim/svnmerger.sh ~/.config/nvim/svnmerger.sh.vim
