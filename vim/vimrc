@@ -176,10 +176,10 @@ set tags=tags;
   let g:syntastic_cpp_check_header     = 1
   let g:syntastic_cpp_compiler         = 'clang++'
   let g:syntastic_cuda_compiler        = 'clang++'
-  let g:syntastic_cpp_compiler_options = '-std=c++20'
+  let g:syntastic_cpp_compiler_options = '-std=c++17'
   let g:syntastic_cpp_checkers         = ['gcc']
   let g:syntastic_cuda_checkers        = ['nvcc']
-  let g:syntastic_cpp_config_file = '.syntastic_cpp_config'
+  let g:syntastic_cpp_config_file      = '.syntastic_cpp_config'
   "let g:syntastic_cpp_flags = ['-I./lib/spdlog/ -I./lib/spdlog/include -I./lib/spdlog/include/spdlog']
   let g:syntastic_cpp_include_dirs = [ 'includes', '../include', '../../include', 'includes/*/', '../include/*/', '../../include/*/', 'external/slog/include']
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -192,3 +192,10 @@ set wildmode=list:longest,full
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Plugin 'rickhowe/diffchar.vim'
    let g:DiffUnit = 'Char'
+
+function! SageGnu()
+    :%s/e\^/exp/g
+    :%s/\^/**/g
+    :%s/hypergeometric((1, 1), (3\/2, 2),/hyperg1(/g
+    :%s/hypergeometric((2, 2), (5\/2, 3),/hyperg2(/g
+endfunction
