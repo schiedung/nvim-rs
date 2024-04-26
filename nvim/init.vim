@@ -1,4 +1,4 @@
-"set directory=~/.config/nvim/temp  ""directory for .swp files
+set directory=~/.config/nvim/tmp  ""directory for .swp files
 """"""" Plugin management stuff """""""
 set nocompatible
 filetype off
@@ -9,24 +9,27 @@ call vundle#begin('~/.config/nvim/bundle')
 Plugin 'VundleVim/Vundle.vim'
 "
 " My Bundles here:
-"Plugin 'majutsuxhi/tagbar' " Handelt with git submodule
-"Plugin 'jcf/vim-latex' "NOTE: painfully slow
 "Plugin 'chriskempson/base16-vim'
-Plugin 'Chiel92/vim-autoformat'
+"Plugin 'jcf/vim-latex' "NOTE: painfully slow
+"Plugin 'majutsuxhi/tagbar' " Handelt with git submodule
+"Plugin 'rdnetto/YCM-Generator'
 "Plugin 'ycm-core/YouCompleteMe'
+Plugin 'Chiel92/vim-autoformat'
+"Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'github/copilot.vim'
 Plugin 'godlygeek/tabular'
 Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'morhetz/gruvbox'
-Plugin 'vim-airline/vim-airline'
-"Plugin 'rdnetto/YCM-Generator'
+Plugin 'petRUShka/vim-sage'
+Plugin 'rhysd/vim-clang-format'
+Plugin 'rickhowe/diffchar.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive.git'
-Plugin 'petRUShka/vim-sage'
-Plugin 'rickhowe/diffchar.vim'
-Plugin 'rhysd/vim-clang-format'
+Plugin 'vim-airline/vim-airline'
+
 "All of your Plugins must be added before the following line
 call vundle#end()             " required!
 filetype plugin indent on     " required!
@@ -192,4 +195,3 @@ set wildmode=list:longest,full
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Plugin 'rickhowe/diffchar.vim'
    let g:DiffUnit = 'Char'
-
