@@ -12,10 +12,10 @@ Plugin 'VundleVim/Vundle.vim'
 "Plugin 'chriskempson/base16-vim'
 "Plugin 'jcf/vim-latex' "NOTE: painfully slow
 "Plugin 'majutsuxhi/tagbar' " Handelt with git submodule
+"Plugin 'octol/vim-cpp-enhanced-highlight'
 "Plugin 'rdnetto/YCM-Generator'
 "Plugin 'ycm-core/YouCompleteMe'
 Plugin 'Chiel92/vim-autoformat'
-"Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'github/copilot.vim'
 Plugin 'godlygeek/tabular'
@@ -27,26 +27,27 @@ Plugin 'rhysd/vim-clang-format'
 Plugin 'rickhowe/diffchar.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
+Plugin 'takac/vim-hardtime'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'vim-airline/vim-airline'
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"tabac/vim-hardtime settings
+let g:hardtime_default_on = 1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "All of your Plugins must be added before the following line
 call vundle#end()             " required!
 filetype plugin indent on     " required!
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " some general vim settings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set mouse=a
 set number
 "set relativenumber
-
-
 ":imap jk <Esc> "NOTE: cause pain in my right hand
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Some syntax settings
 syntax on
 au BufNewFile,BufRead *.cu  set filetype=cuda
@@ -55,27 +56,22 @@ au BufNewFile,BufRead *.cuh set filetype=cuda
 :highlight ExtraWhitespace ctermbg=darkgray guibg=darkgray
 :autocmd ColorScheme * highlight ExtraWhitespace ctermbg=darkgray guibg=darkgray
 :match ExtraWhitespace /\s\+$\|\t/
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "some indenting format options
 filetype plugin indent on
-let &showbreak='=>  '     "indicates line wrapping
-let g:tex_flavor='latex'     "sets *.tex to latex
+let &showbreak='=>  ' "indicates line wrapping
+let g:tex_flavor='latex' "sets *.tex to latex
 set expandtab
 set shiftwidth=4
 set smartindent
 set tabstop=4
 set wrap linebreak
 
-set nocompatible               " be iMproved
-filetype off                   " required!
+set nocompatible " be iMproved
 
 map<F2> :%s/\s\+$// <bar> retab  <CR>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" colorsettings
+" Color settings
 if has("gui_running")
   "set guifont=Inconsolata\ 10
   let g:solarized_termcolors=256
@@ -196,9 +192,12 @@ set wildmode=list:longest,full
 "Plugin 'rickhowe/diffchar.vim'
    let g:DiffUnit = 'Char'
 
-function! SageGnu()
-    :%s/e\^/exp/g
-    :%s/\^/**/g
-    :%s/hypergeometric((1, 1), (3\/2, 2),/hyperg1(/g
-    :%s/hypergeometric((2, 2), (5\/2, 3),/hyperg2(/g
-endfunction
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""Plugin 'vim-airline/vim-airline'
+let g:airline_powerline_fonts = 0
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"tabac/vim-hardtime settings
+let g:hardtime_default_on = 1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
