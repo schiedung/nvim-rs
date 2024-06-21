@@ -19,10 +19,12 @@ Plugin 'Chiel92/vim-autoformat'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'github/copilot.vim'
 Plugin 'godlygeek/tabular'
+Plugin 'iamcco/markdown-preview.nvim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'morhetz/gruvbox'
 Plugin 'petRUShka/vim-sage'
+Plugin 'psliwka/vim-smoothie' "Smooth scrolling for Ctrl-D and Ctrl-U
 Plugin 'rhysd/vim-clang-format'
 Plugin 'rickhowe/diffchar.vim'
 Plugin 'scrooloose/nerdtree'
@@ -130,9 +132,9 @@ set tags=tags;
 " Keybindings for fugitive
   map <leader>gw :Gwrite<CR>
   map <leader>gr :Gread<CR>
-  map <leader>gs :Gstatus<CR>
-  map <leader>gd :Gdiff<CR>
-  map <leader>gc :Gcommit<CR>
+  map <leader>gs :Git status<CR>
+  map <leader>gd :Gvdiff<CR>
+  map <leader>gc :Git commit<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
