@@ -27,11 +27,17 @@ Plugin 'petRUShka/vim-sage'
 Plugin 'psliwka/vim-smoothie' "Smooth scrolling for Ctrl-D and Ctrl-U
 Plugin 'rhysd/vim-clang-format'
 Plugin 'rickhowe/diffchar.vim'
+Plugin 'ryanoasis/vim-devicons'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'takac/vim-hardtime'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'vim-airline/vim-airline'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"ryanoasis/vim-devicons'
+set encoding=utf-8
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "tabac/vim-hardtime settings
