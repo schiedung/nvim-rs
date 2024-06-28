@@ -2,6 +2,14 @@
 
 ## Description
 
+## Pre-requisites
+
+### Linux
+
+```bash
+    sudo apt-get install -y neovim git luarocks
+```
+
 ## Installation
 Neovim and vim configuration files will be installed if Neovim or Vim is
 installed on the system. The configuration files will be installed in the user's
