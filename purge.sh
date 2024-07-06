@@ -3,7 +3,7 @@ read -p "Are you sure to delte all vim and neovim configuration files (y/n)? " -
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    rm ~/.vimrc
+    rm -f ~/.vimrc
     rm -rf ~/.vim
     rm -rf ~/.config/nvim
 fi
