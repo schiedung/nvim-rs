@@ -25,8 +25,7 @@ vim.g.maplocalleader = "\\"
 require("lazy").setup({
   spec = {
     -- add your plugins here
-    {
-      "nvim-neo-tree/neo-tree.nvim",
+    { "nvim-neo-tree/neo-tree.nvim",
       branch = "v3.x",
       dependencies = {
         "nvim-lua/plenary.nvim",
@@ -39,9 +38,17 @@ require("lazy").setup({
     { "godlygeek/tabular"},
     { "ellisonleao/gruvbox.nvim",
       init = function()
-      vim.cmd("colorscheme gruvbox")
+        vim.cmd("colorscheme gruvbox")
       end
     },
+    { "m4xshen/hardtime.nvim",
+       dependencies = {
+         "MunifTanjim/nui.nvim",
+	 "nvim-lua/plenary.nvim"
+       },
+       opts = {}
+    },
+    { "tpope/vim-fugitive"},
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
