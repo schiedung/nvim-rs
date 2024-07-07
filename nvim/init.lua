@@ -21,6 +21,9 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+vim.opt.number = true -- Add line numbers
+vim.opt.relativenumber = true  -- Set relative numbers
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
@@ -42,13 +45,11 @@ require("lazy").setup({
       end
     },
     { "m4xshen/hardtime.nvim",
-       dependencies = {
-         "MunifTanjim/nui.nvim",
-	 "nvim-lua/plenary.nvim"
-       },
-       opts = {}
+       dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+       opts = { disable_mouse = false}
     },
     { "tpope/vim-fugitive"},
+    { "nvim-treesitter/nvim-treesitter" }, -- Can not see any improvement
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
