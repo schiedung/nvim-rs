@@ -39,7 +39,7 @@ require("lazy").setup({
     { "godlygeek/tabular"},
     { "ellisonleao/gruvbox.nvim",
       init = function()
-	vim.cmd("colorscheme gruvbox")
+      vim.cmd("colorscheme gruvbox")
       end
     },
   },
