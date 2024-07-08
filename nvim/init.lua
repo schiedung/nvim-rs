@@ -39,9 +39,15 @@ require("lazy").setup({
     },
     { "github/copilot.vim" },
     { "godlygeek/tabular"},
-    { "ellisonleao/gruvbox.nvim",
+    ---{ "ellisonleao/gruvbox.nvim",
+    ---  init = function()
+    ---    vim.cmd("colorscheme gruvbox")
+    ---  end
+    ---},
+    { "rebelot/kanagawa.nvim",
+      lazy = false,
       init = function()
-        vim.cmd("colorscheme gruvbox")
+        vim.cmd("colorscheme kanagawa")
       end
     },
     { "m4xshen/hardtime.nvim",
@@ -49,8 +55,18 @@ require("lazy").setup({
        opts = { disable_mouse = false}
     },
     { "tpope/vim-fugitive"},
-    { "nvim-treesitter/nvim-treesitter" }, -- Can not see any improvement
+    { "nvim-treesitter/nvim-treesitter",
+      config = function()
+	require'nvim-treesitter.configs'.setup {
+	  ensure_installed = {"lua", "c", "cpp", "cuda", "python", "bash", "markdown"},
+	  highlight = {
+	    enable = true,
+	  },
+	}
+      end
+    },
   },
+
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "habamax" } },
