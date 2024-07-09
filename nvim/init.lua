@@ -23,6 +23,16 @@ vim.opt.rtp:prepend(lazypath)
 
 vim.opt.number = true -- Add line numbers
 vim.opt.relativenumber = true  -- Set relative numbers
+vim.opt.expandtab = true -- Use spaces instead of tabs
+vim.opt.tabstop = 4 -- Number of spaces that a <Tab> in the file counts for
+vim.opt.shiftwidth = 4 -- Number of spaces to use for each step of (auto)indent
+vim.opt.smartindent = true -- Do smart autoindenting when starting a new line
+vim.opt.autoindent = true -- Copy indent from current line when starting a new line
+vim.opt.wrap = true -- Wrap lines
+vim.opt.showbreak = "↪   " -- indicate line wrap
+vim.opt.colorcolumn = "80" -- highlight column 80
+vim.opt.spell = true -- Enable spell checking
+
 
 -- Setup lazy.nvim
 require("lazy").setup({
@@ -88,8 +98,16 @@ require("lazy").setup({
       init = function()
         -- VimTeX configuration goes here, e.g.
         -- vim.g.vimtex_view_method = "zathura"
-      end
-    }
+      end,
+    },
+    { "majutsushi/tagbar",
+      lazy = true,
+      keys = { "<F4>", "<F8>" },
+      config = function()
+        vim.api.nvim_set_keymap('n', '<F4>', ':!/usr/bin/ctags -R --exclude=.git --exclude=documentation --c++-kinds=+p --langmap=c++:+.cu --fields=+liaS --extra=+q .<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '<F8>', ':TagbarToggle<CR>', { noremap = true, silent = true })
+      end,
+    },
   },
 
   -- Configure any other settings here. See the documentation for more details.
