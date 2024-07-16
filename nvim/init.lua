@@ -84,13 +84,11 @@ require("lazy").setup({
     },
     { "nvim-treesitter/nvim-treesitter", -- syntax highlighting
       config = function()
-	require'nvim-treesitter.configs'.setup {
-	  ensure_installed = {"lua", "c", "cpp", "cuda", "python", "bash", "markdown"},
-	  highlight = {
-	    enable = true,
-	  },
-	}
-      end
+        require'nvim-treesitter.configs'.setup {
+          ensure_installed = {"lua", "c", "cpp", "cuda", "python", "bash", "markdown"},
+          highlight = { enable = true, },
+        }
+      end,
     },
     { "lervag/vimtex",
       lazy = true,
