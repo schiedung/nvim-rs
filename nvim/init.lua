@@ -108,6 +108,7 @@ require("lazy").setup({
         vim.api.nvim_set_keymap('n', '<F8>', ':TagbarToggle<CR>', { noremap = true, silent = true })
       end,
     },
+    { "vim-airline/vim-airline", },
   },
 
   -- Configure any other settings here. See the documentation for more details.
