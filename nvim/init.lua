@@ -131,6 +131,12 @@ require("lazy").setup({
         lspconfig.clangd.setup({})
       end,
     },
+    {
+      "williamboman/mason.nvim",
+      config = function()
+        require("mason").setup()
+      end,
+    }
   },
 
   -- Configure any other settings here. See the documentation for more details.
