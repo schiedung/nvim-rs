@@ -33,26 +33,38 @@ vim.opt.showbreak = "↪   " -- indicate line wrap
 vim.opt.colorcolumn = "80" -- highlight column 80
 vim.opt.spell = true -- Enable spell checking
 
+--vim.api.nvim_create_autocmd("BufEnter", {
+--  callback = function()
+--    vim.lsp.start({
+--      name = "clangd",
+--      cmd = {"clangd"},
+--      root_dir = vim.fn.getcwd(),
+--    })
+--  end,
+--})
 
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
     -- add your plugins here
-    { "rebelot/kanagawa.nvim", -- my custom colorscheme
+    {
+      "rebelot/kanagawa.nvim", -- my custom colorscheme
       lazy = false, -- allways load this plugin
       priority = 1000, -- load this plugin before all others
       config = function()
         vim.cmd([[colorscheme kanagawa]])
       end,
     },
-    { "ellisonleao/gruvbox.nvim", -- old colorscheme
+    {
+      "ellisonleao/gruvbox.nvim", -- old colorscheme
       enabled = false,
       lazy = false,
       config = function()
         vim.cmd("colorscheme gruvbox")
       end,
     },
-    { "nvim-neo-tree/neo-tree.nvim", -- file tree plugin
+    {
+      "nvim-neo-tree/neo-tree.nvim", -- file tree plugin
       lazy = true, -- load this plugin lazily
       keys = { "<C-n>", "<leader>n", "<cmd>Neotree<CR>" }, -- key bindings to load plugin
       branch = "v3.x",
@@ -73,16 +85,19 @@ require("lazy").setup({
        dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
        opts = { disable_mouse = false}
     },
-    { "tpope/vim-fugitive", -- premier git plugin
+    {
+      "tpope/vim-fugitive", -- premier git plugin
       config = function()
-          vim.api.nvim_set_keymap('n', '<leader>gw', ':Gwrite<CR>', { noremap = true, silent = true })
-          vim.api.nvim_set_keymap('n', '<leader>gr', ':Gread<CR>', { noremap = true, silent = true })
-          vim.api.nvim_set_keymap('n', '<leader>gs', ':Git status<CR>', { noremap = true, silent = true })
-          vim.api.nvim_set_keymap('n', '<leader>gd', ':Gitvdiff<CR>', { noremap = true, silent = true })
-          vim.api.nvim_set_keymap('n', '<leader>gc', ':Git commit<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '<leader>gw', ':Gwrite<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '<leader>gr', ':Gread<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '<leader>gs', ':Git status<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '<leader>gd', ':Gvdiff<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '<leader>gc', ':Git commit<CR>', { noremap = true, silent = true })
       end,
     },
-    { "nvim-treesitter/nvim-treesitter", -- syntax highlighting
+    {
+      "nvim-treesitter/nvim-treesitter", -- syntax highlighting
+      enabled = true,
       config = function()
         require'nvim-treesitter.configs'.setup {
           ensure_installed = {"lua", "c", "cpp", "cuda", "python", "bash", "markdown"},
@@ -90,7 +105,8 @@ require("lazy").setup({
         }
       end,
     },
-    { "lervag/vimtex",
+    {
+      "lervag/vimtex",
       lazy = true,
       ft = "tex",
       init = function()
@@ -98,7 +114,8 @@ require("lazy").setup({
         -- vim.g.vimtex_view_method = "zathura"
       end,
     },
-    { "majutsushi/tagbar",
+    {
+      "majutsushi/tagbar",
       lazy = true,
       keys = { "<F4>", "<F8>" },
       config = function()
@@ -107,6 +124,13 @@ require("lazy").setup({
       end,
     },
     { "vim-airline/vim-airline", },
+    {
+      "neovim/nvim-lspconfig",
+      config = function()
+        local lspconfig = require("lspconfig")
+        lspconfig.clangd.setup({})
+      end,
+    },
   },
 
   -- Configure any other settings here. See the documentation for more details.
