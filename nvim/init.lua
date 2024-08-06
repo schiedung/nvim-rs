@@ -131,6 +131,12 @@ require("lazy").setup({
         lspconfig.clangd.setup({})
       end,
     },
+    {
+      "karb94/neoscroll.nvim",
+      config = function ()
+        require('neoscroll').setup({})
+      end
+    }
   },
 
   -- Configure any other settings here. See the documentation for more details.
