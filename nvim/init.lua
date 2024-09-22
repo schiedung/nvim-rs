@@ -104,14 +104,12 @@ require("lazy").setup({
       enabled = true,
       config = function()
         require'nvim-treesitter.configs'.setup {
-          ensure_installed = {"lua", "c", "cpp", "cuda", "python", "bash", "markdown"},
+          ensure_installed = {"lua", "c", "cpp", "cuda", "python", "bash", "markdown","yaml"},
           highlight = { enable = true, },
           fold = { enable = true },
         }
         vim.opt.foldmethod = "expr"
         vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-
-        -- Set the default fold level (optional, 99 to keep folds open by default)
         vim.opt.foldlevel = 1
       end,
     },
