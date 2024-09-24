@@ -44,28 +44,46 @@ vim.opt.spell = true -- Enable spell checking
 --  end,
 --})
 
+-- Function to map keybindings
+local function on_attach(_, bufnr)
+  -- Create a local function to simplify mapping keybindings
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local opts = { noremap=true, silent=true }
+
+  -- Mappings.
+  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+end
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
     -- add your plugins here
-    {
-      "rebelot/kanagawa.nvim", -- my custom colorscheme
+    { "rebelot/kanagawa.nvim", -- my custom colorscheme
       lazy = false, -- allways load this plugin
       priority = 1000, -- load this plugin before all others
       config = function()
         vim.cmd([[colorscheme kanagawa]])
       end,
     },
-    {
-      "ellisonleao/gruvbox.nvim", -- old colorscheme
+    { "ellisonleao/gruvbox.nvim", -- old colorscheme
       enabled = false,
       lazy = false,
       config = function()
         vim.cmd("colorscheme gruvbox")
       end,
     },
-    {
-      "nvim-neo-tree/neo-tree.nvim", -- file tree plugin
+    { "nvim-neo-tree/neo-tree.nvim", -- file tree plugin
       lazy = true, -- load this plugin lazily
       keys = { "<C-n>", "<leader>n", "<cmd>Neotree<CR>" }, -- key bindings to load plugin
       branch = "v3.x",
@@ -86,8 +104,7 @@ require("lazy").setup({
        dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
        opts = { disable_mouse = false}
     },
-    {
-      "tpope/vim-fugitive", -- premier git plugin
+    {"tpope/vim-fugitive", -- premier git plugin
       config = function()
         vim.api.nvim_set_keymap('n', '<leader>gw', ':Gwrite<CR>', { noremap = true, silent = true })
         vim.api.nvim_set_keymap('n', '<leader>gr', ':Gread<CR>', { noremap = true, silent = true })
@@ -96,8 +113,7 @@ require("lazy").setup({
         vim.api.nvim_set_keymap('n', '<leader>gc', ':Git commit<CR>', { noremap = true, silent = true })
       end,
     },
-    {
-      "nvim-treesitter/nvim-treesitter", -- syntax highlighting
+    { "nvim-treesitter/nvim-treesitter", -- syntax highlighting
       enabled = true,
       config = function()
         require'nvim-treesitter.configs'.setup {
@@ -110,8 +126,7 @@ require("lazy").setup({
         vim.opt.foldlevel = 1
       end,
     },
-    {
-      "lervag/vimtex",
+    { "lervag/vimtex",
       lazy = true,
       ft = "tex",
       init = function()
@@ -119,8 +134,7 @@ require("lazy").setup({
         -- vim.g.vimtex_view_method = "zathura"
       end,
     },
-    {
-      "majutsushi/tagbar",
+    { "majutsushi/tagbar",
       lazy = true,
       keys = { "<F4>", "<F8>" },
       config = function()
@@ -129,21 +143,18 @@ require("lazy").setup({
       end,
     },
     { "vim-airline/vim-airline", },
-    {
-      "neovim/nvim-lspconfig",
+    { "neovim/nvim-lspconfig",
       --config = function()
       --  local lspconfig = require("lspconfig")
       --  lspconfig.clangd.setup({})
       --end,
     },
-    {
-      "williamboman/mason.nvim",
+    { "williamboman/mason.nvim",
       config = function()
         require("mason").setup()
       end,
     },
-    {
-      "williamboman/mason-lspconfig.nvim",
+    { "williamboman/mason-lspconfig.nvim",
       dependencies = { "williamboman/mason.nvim" },
       config = function()
         require("mason-lspconfig").setup({
@@ -151,19 +162,22 @@ require("lazy").setup({
         })
         require("mason-lspconfig").setup_handlers({
           function(server_name)
-            require("lspconfig")[server_name].setup({})
+            require("lspconfig")[server_name].setup({
+              on_attach = on_attach,
+              flags = {
+                debounce_text_changes = 150,
+              },
+            })
           end,
         })
       end,
     },
-    {
-      "karb94/neoscroll.nvim",
+    { "karb94/neoscroll.nvim",
       config = function ()
         require('neoscroll').setup({})
       end
     },
-    {
-      "folke/which-key.nvim",
+    { "folke/which-key.nvim",
       event = "VeryLazy",
       opts = {
         -- your configuration comes here
