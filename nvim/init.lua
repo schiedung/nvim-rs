@@ -1,5 +1,4 @@
 _G.vim = vim -- Make vim global so that it is available for lsp 
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -102,9 +101,13 @@ require("lazy").setup({
       enabled = true,
       config = function()
         require'nvim-treesitter.configs'.setup {
-          ensure_installed = {"lua", "c", "cpp", "cuda", "python", "bash", "markdown"},
+          ensure_installed = {"lua", "c", "cpp", "cuda", "python", "bash", "markdown","yaml"},
           highlight = { enable = true, },
+          fold = { enable = true },
         }
+        vim.opt.foldmethod = "expr"
+        vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+        vim.opt.foldlevel = 1
       end,
     },
     {
