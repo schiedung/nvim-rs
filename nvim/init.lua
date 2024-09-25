@@ -135,15 +135,15 @@ require("lazy").setup({
       end,
     },
     { "majutsushi/tagbar",
-    lazy = true,
-    keys = { "<F4>", "<F8>" },
-    config = function()
+      lazy = true,
+      keys = { "<F4>", "<F8>" },
+      config = function()
         vim.api.nvim_set_keymap('n', '<F4>', ':!/usr/bin/ctags -R --exclude=.git --exclude=documentation --c++-kinds=+p --langmap=c++:+.cu --fields=+liaS --extra=+q .<CR>', { noremap = true, silent = true })
         vim.api.nvim_set_keymap('n', '<F8>', ':TagbarToggle<CR>', { noremap = true, silent = true })
-    end,
-},
-{ "vim-airline/vim-airline", },
-{ "neovim/nvim-lspconfig",
+      end,
+    },
+    { "vim-airline/vim-airline", },
+    { "neovim/nvim-lspconfig",
       --config = function()
       --  local lspconfig = require("lspconfig")
       --  lspconfig.clangd.setup({})
