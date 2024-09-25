@@ -117,7 +117,7 @@ require("lazy").setup({
       enabled = true,
       config = function()
         require'nvim-treesitter.configs'.setup {
-          ensure_installed = {"lua", "c", "cpp", "cuda", "python", "bash", "markdown","yaml"},
+          ensure_installed = {"lua", "vimdoc", "c", "cpp", "cuda", "python", "bash", "markdown","yaml"},
           highlight = { enable = true, },
           fold = { enable = true },
         }
@@ -135,15 +135,15 @@ require("lazy").setup({
       end,
     },
     { "majutsushi/tagbar",
-      lazy = true,
-      keys = { "<F4>", "<F8>" },
-      config = function()
+    lazy = true,
+    keys = { "<F4>", "<F8>" },
+    config = function()
         vim.api.nvim_set_keymap('n', '<F4>', ':!/usr/bin/ctags -R --exclude=.git --exclude=documentation --c++-kinds=+p --langmap=c++:+.cu --fields=+liaS --extra=+q .<CR>', { noremap = true, silent = true })
         vim.api.nvim_set_keymap('n', '<F8>', ':TagbarToggle<CR>', { noremap = true, silent = true })
-      end,
-    },
-    { "vim-airline/vim-airline", },
-    { "neovim/nvim-lspconfig",
+    end,
+},
+{ "vim-airline/vim-airline", },
+{ "neovim/nvim-lspconfig",
       --config = function()
       --  local lspconfig = require("lspconfig")
       --  lspconfig.clangd.setup({})
@@ -193,6 +193,12 @@ require("lazy").setup({
           desc = "Buffer Local Keymaps (which-key)",
         },
       },
+    },
+    { "lukas-reineke/indent-blankline.nvim",
+      main = "ibl",
+      ---@module "ibl"
+      ---@type ibl.config
+      opts = {},
     }
   },
 
