@@ -199,7 +199,67 @@ require("lazy").setup({
       ---@module "ibl"
       ---@type ibl.config
       opts = {},
-    }
+    },
+    { "hrsh7th/nvim-cmp",
+      -- TODO add lazy loading
+      dependencies = {
+        'neovim/nvim-lspconfig',
+        'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-path',
+        'hrsh7th/cmp-cmdline',
+        'hrsh7th/nvim-cmp'
+      },
+      config = function()
+        require'cmp'.setup {
+          snippet = {
+            -- REQUIRED - you must specify a snippet engine
+            expand = function(args)
+              vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+            end,
+          },
+          window = {
+            completion = require('cmp').config.window.bordered(),
+            documentation = require('cmp').config.window.bordered(),
+          },
+          mapping = require('cmp').mapping.preset.insert({
+            ['<C-d>'] = require('cmp').mapping.scroll_docs(-4),
+            ['<C-f>'] = require('cmp').mapping.scroll_docs(4),
+            ['<C-Space>'] = require('cmp').mapping.complete(),
+            ['<C-e>'] = require('cmp').mapping.close(),
+            ['<CR>'] = require('cmp').mapping.confirm({ select = true }),
+          }),
+          sources = {
+            { name = 'nvim_lsp' },
+            { name = 'buffer' },
+          },
+          -- Use buffer source for `/` and `?` code completion (if you enabled `native_menu`, this won't work anymore).
+          require('cmp').setup.cmdline({ '/', '?' }, {
+            mapping = require('cmp').mapping.preset.cmdline(),
+            sources = {
+              { name = 'buffer' }
+            }
+          }),
+          -- Use cmdline & path source for ':' code completion (if you enabled `native_menu`, this won't work anymore).
+          require('cmp').setup.cmdline(':', {
+            mapping = require('cmp').mapping.preset.cmdline(),
+            sources = require('cmp').config.sources({
+              { name = 'path' }
+            }, {
+              { name = 'cmdline' }
+            }),
+            matching = { disallow_symbol_nonprefix_matching = false }
+          }),
+          -- Set up lspconfig.
+          require('lspconfig')['clangd'].setup {
+            capabilities = require('cmp_nvim_lsp').default_capabilities(),
+          },
+          require('lspconfig')['lua_ls'].setup {
+            capabilities = require('cmp_nvim_lsp').default_capabilities(),
+          }
+        }
+      end,
+    },
   },
 
   -- Configure any other settings here. See the documentation for more details.
