@@ -103,7 +103,17 @@ require("lazy").setup({
       enabled = true,
       config = function()
         require'nvim-treesitter.configs'.setup {
-          ensure_installed = {"lua", "vimdoc", "c", "cpp", "cuda", "python", "bash", "markdown","yaml"},
+          ensure_installed = {
+            "lua",
+            "vimdoc",
+            "c",
+            "cpp",
+            "cuda",
+            "python",
+            "bash",
+            "markdown",
+            "yaml",
+            "html"},
           highlight = { enable = true, },
           fold = { enable = true },
         }
