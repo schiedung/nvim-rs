@@ -43,6 +43,13 @@ vim.opt.spell = true -- Enable spell checking
 --    })
 --  end,
 --})
+--
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = {"*.frag", "*.vert"},
+  callback = function()
+    vim.bo.filetype = "glsl"
+  end,
+})
 
 -- Setup lazy.nvim
 require("lazy").setup({
