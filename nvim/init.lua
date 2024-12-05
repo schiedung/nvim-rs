@@ -1,4 +1,4 @@
-_G.vim = vim -- Make vim global so that it is available for lsp 
+_G.vim = vim -- Make vim global so that it is available for lsp
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -49,6 +49,12 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
   callback = function()
     vim.bo.filetype = "glsl"
   end,
+})
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = "*.sage",
+    callback = function()
+        vim.bo.filetype = "python"
+    end,
 })
 
 -- Setup lazy.nvim
