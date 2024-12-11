@@ -124,7 +124,7 @@ require("lazy").setup({
           fold = { enable = true },
         }
         vim.opt.foldmethod = "expr"
-        vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+        vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
         vim.opt.foldlevel = 1
       end,
     },
