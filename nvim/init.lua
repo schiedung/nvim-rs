@@ -1,4 +1,4 @@
-_G.vim = vim -- Make vim global so that it is available for lsp 
+_G.vim = vim -- Make vim global so that it is available for lsp
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -43,7 +43,6 @@ vim.opt.spell = true -- Enable spell checking
 --    })
 --  end,
 --})
-
 -- Function to map keybindings
 local function on_attach(_, bufnr)
   -- Create a local function to simplify mapping keybindings
@@ -51,8 +50,8 @@ local function on_attach(_, bufnr)
   local opts = { noremap=true, silent=true }
 
   -- Mappings.
-  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', {desc="Go to definition", noremap=true, silent=true })
-  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', {desc="Go to declaration", noremap=true, silent=true })
+  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -64,6 +63,18 @@ local function on_attach(_, bufnr)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 end
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = {"*.frag", "*.vert"},
+  callback = function()
+    vim.bo.filetype = "glsl"
+  end,
+})
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = "*.sage",
+    callback = function()
+        vim.bo.filetype = "python"
+    end,
+})
 
 -- Setup lazy.nvim
 require("lazy").setup({
@@ -117,12 +128,22 @@ require("lazy").setup({
       enabled = true,
       config = function()
         require'nvim-treesitter.configs'.setup {
-          ensure_installed = {"lua", "vimdoc", "c", "cpp", "cuda", "python", "bash", "markdown","yaml"},
+          ensure_installed = {
+            "lua",
+            "vimdoc",
+            "c",
+            "cpp",
+            "cuda",
+            "python",
+            "bash",
+            "markdown",
+            "yaml",
+            "html"},
           highlight = { enable = true, },
           fold = { enable = true },
         }
         vim.opt.foldmethod = "expr"
-        vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+        vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
         vim.opt.foldlevel = 1
       end,
     },
@@ -163,7 +184,22 @@ require("lazy").setup({
         require("mason-lspconfig").setup_handlers({
           function(server_name)
             require("lspconfig")[server_name].setup({
-              on_attach = on_attach,
+              on_attach = function (_, bufnr)
+                  local opts = {noremap=true, silent=true }
+                  --vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', vim.tbl_extend('force', opts, { desc = "Jump to definition" }))
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', vim.tbl_extend('force', opts, { desc = "Jump to definition" }))
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', vim.tbl_extend('force', opts, { desc = "Jump to declatation" }))
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+                end,
               flags = {
                 debounce_text_changes = 150,
               },
@@ -201,6 +237,7 @@ require("lazy").setup({
       opts = {},
     },
     { "hrsh7th/nvim-cmp",
+      enabled = true, -- TODO breaks lspconfig
       -- TODO add lazy loading
       dependencies = {
         'neovim/nvim-lspconfig',
@@ -261,6 +298,7 @@ require("lazy").setup({
       end,
     },
     {'nvim-telescope/telescope.nvim',
+      enabled = true,
       dependencies = { 'nvim-lua/plenary.nvim' },
       config = function()
         local builtin = require('telescope.builtin')
@@ -276,5 +314,8 @@ require("lazy").setup({
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "habamax" } },
   -- automatically check for plugin updates
-  checker = { enabled = true },
+  checker = {
+    enabled = true,
+    auto_install = true,
+  },
 })
