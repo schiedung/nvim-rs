@@ -90,7 +90,7 @@ require("lazy").setup({
         vim.api.nvim_set_keymap('n', '<leader>n', ':Neotree toggle<CR>', { noremap = true, silent = true })
       end,
     },
-    { "github/copilot.vim" },
+    -- { "github/copilot.vim" },
     { "godlygeek/tabular"},
     { "m4xshen/hardtime.nvim",
        dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
@@ -211,7 +211,9 @@ require("lazy").setup({
         },
       },
     },
-    { "lukas-reineke/indent-blankline.nvim",
+    { "lukas-reineke/indent-blankline.nvim", --  adds indentation guides to Neovim
+      enabled = true,
+      dependencies = { "nvim-treesitter/nvim-treesitter" },
       main = "ibl",
       ---@module "ibl"
       ---@type ibl.config
