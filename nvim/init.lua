@@ -109,7 +109,6 @@ require("lazy").setup({
         vim.api.nvim_set_keymap('n', '<leader>n', ':Neotree toggle<CR>', { noremap = true, silent = true })
       end,
     },
-    { "github/copilot.vim" },
     { "godlygeek/tabular"},
     { "m4xshen/hardtime.nvim",
        dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
