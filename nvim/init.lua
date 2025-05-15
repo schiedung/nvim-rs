@@ -176,6 +176,7 @@ require("lazy").setup({
       end,
     },
     { "williamboman/mason-lspconfig.nvim",
+      enabled = false, -- TODO breaking update
       dependencies = { "williamboman/mason.nvim" },
       config = function()
         require("mason-lspconfig").setup({
@@ -239,7 +240,7 @@ require("lazy").setup({
       opts = {},
     },
     { "hrsh7th/nvim-cmp",
-      enabled = true, -- TODO breaks lspconfig
+      enabled = false, -- TODO breaks lspconfig
       -- TODO add lazy loading
       dependencies = {
         'neovim/nvim-lspconfig',
