@@ -33,6 +33,7 @@ vim.opt.wrap = true -- Wrap lines
 vim.opt.showbreak = "↪   " -- indicate line wrap
 vim.opt.colorcolumn = "80" -- highlight column 80
 vim.opt.spell = true -- Enable spell checking
+vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-N>', { noremap = true, silent = true }) -- Map Esc in terminal mode to exit to normal mode
 
 --vim.api.nvim_create_autocmd("BufEnter", {
 --  callback = function()
