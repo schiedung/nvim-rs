@@ -120,11 +120,28 @@ require("lazy").setup({
           openai_api_key = os.getenv("OPENAI_API_KEY"),
           providers = {
             openai = {
-              disable = false,
+              disable = true,
               endpoint = "https://api.openai.com/v1/chat/completions",
               -- secret = os.getenv("OPENAI_API_KEY"),
             },
-          }
+            ollama = {
+              endpoint = "http://localhost:11434/v1/chat/completions",
+            },
+          },
+          agents = {
+            {
+              name = "ChatOllamaLlama3.1-8B",
+              disable = true,
+            },
+            {
+              name = "Joda",
+              provider = "ollama",
+              chat = true,
+              command = true,
+              model = { model = "codellama:latest" },
+              system_prompt = "Please imitate master Joda from Star Wars when aswering.",
+            },
+          },
         }
         require("gp").setup(conf)
             -- Setup shortcuts here (see Usage > Shortcuts in the Documentation/Readme)
