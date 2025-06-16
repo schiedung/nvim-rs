@@ -110,7 +110,26 @@ require("lazy").setup({
         vim.api.nvim_set_keymap('n', '<leader>n', ':Neotree toggle<CR>', { noremap = true, silent = true })
       end,
     },
-    -- { "github/copilot.vim" },
+    { "github/copilot.vim",
+      enabled = false,
+    },
+    {
+      "robitx/gp.nvim",
+      config = function()
+        local conf = {
+          openai_api_key = os.getenv("OPENAI_API_KEY"),
+          providers = {
+            openai = {
+              disable = false,
+              endpoint = "https://api.openai.com/v1/chat/completions",
+              -- secret = os.getenv("OPENAI_API_KEY"),
+            },
+          }
+        }
+        require("gp").setup(conf)
+            -- Setup shortcuts here (see Usage > Shortcuts in the Documentation/Readme)
+        end,
+    },
     { "godlygeek/tabular"},
     { "m4xshen/hardtime.nvim",
        dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
