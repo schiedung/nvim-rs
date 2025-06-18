@@ -115,6 +115,8 @@ require("lazy").setup({
     },
     {
       "robitx/gp.nvim",
+      enabled = true,
+      lazy = true,
       config = function()
         local conf = {
           openai_api_key = os.getenv("OPENAI_API_KEY"),
@@ -270,6 +272,7 @@ require("lazy").setup({
     },
     { "lukas-reineke/indent-blankline.nvim", --  adds indentation guides to Neovim
       enabled = true,
+      lazy = true,
       dependencies = { "nvim-treesitter/nvim-treesitter" },
       main = "ibl",
       ---@module "ibl"
