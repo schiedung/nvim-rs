@@ -11,7 +11,7 @@ Plugin 'VundleVim/Vundle.vim'
 " My Bundles here:
 "Plugin 'chriskempson/base16-vim'
 "Plugin 'jcf/vim-latex' "NOTE: painfully slow
-"Plugin 'majutsuxhi/tagbar' " Handelt with git submodule
+"Plugin 'majutsushi/tagbar' " Handelt with git submodule
 "Plugin 'octol/vim-cpp-enhanced-highlight'
 "Plugin 'rdnetto/YCM-Generator'
 "Plugin 'ycm-core/YouCompleteMe'
@@ -203,9 +203,4 @@ set wildmode=list:longest,full
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 ""Plugin 'vim-airline/vim-airline'
 let g:airline_powerline_fonts = 0
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"tabac/vim-hardtime settings
-let g:hardtime_default_on = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
