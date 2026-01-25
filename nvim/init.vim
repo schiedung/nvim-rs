@@ -7,14 +7,8 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
 call vundle#begin('~/.config/nvim/bundle')
 
 Plugin 'VundleVim/Vundle.vim'
-"
-" My Bundles here:
-"Plugin 'chriskempson/base16-vim'
-"Plugin 'jcf/vim-latex' "NOTE: painfully slow
-"Plugin 'majutsushi/tagbar' " Handelt with git submodule
-"Plugin 'octol/vim-cpp-enhanced-highlight'
-"Plugin 'rdnetto/YCM-Generator'
-"Plugin 'ycm-core/YouCompleteMe'
+
+" Active plugins
 Plugin 'Chiel92/vim-autoformat'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'github/copilot.vim'
@@ -81,13 +75,10 @@ map<F2> :%s/\s\+$// <bar> retab  <CR>
 
 " Color settings
 if has("gui_running")
-  "set guifont=Inconsolata\ 10
   let g:solarized_termcolors=256
   syntax enable
   set background=light
-  "colorscheme gruvbox
   colorscheme solarized
-  "let g:gruvbox_contrast_dark = 'hard'
 else
   syntax enable
   set t_Co=256
@@ -97,72 +88,45 @@ else
     colorscheme gruvbox
   catch /^Vim\%((\a\+)\)\=:E185/
   endtry
-  "colorscheme solarized
-  "let g:gruvbox_contrast_dark = 'hard'
   :highlight Normal ctermbg=NONE
 endif
 
 " Search settings
-:set iskeyword+=_ "Add _ to search pattern (example test_test)
-:set hlsearch "Highlighting search matches
+:set iskeyword+=_
+:set hlsearch
 
-" line width settings
-":set tw=80 "Deactivated the option because i want to to decide that
+" Line width settings
 :set colorcolumn=80
 
-" spell checking options
+" Spell checking
 :set spell
 
-" set transparent background
-"set t_8f=\[[38;2;%lu;%lu;%lum
-"set t_8b=\[[48;2;%lu;%lu;%lum
-"set termguicolors
-"set background=dark
-"hi! Normal ctermbg=NONE guibg=NONE
-"hi! NonText ctermbg=NONE guibg=NONE
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" tag-settings
+" Tag settings
 set tags=tags;
 " create tags for current directory (recursive)
  map <F4> :!/usr/bin/ctags -R --exclude=.git --exclude=documentation --c++-kinds=+p --langmap=c++:+.cu --fields=+liaS --extra=+q .<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Package options
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin configurations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Keybindings for fugitive
-  map <leader>gw :Gwrite<CR>
-  map <leader>gr :Gread<CR>
-  map <leader>gs :Git status<CR>
-  map <leader>gd :Gvdiff<CR>
-  map <leader>gc :Git commit<CR>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Keybindings for fugitive (Git integration)
+map <leader>gw :Gwrite<CR>
+map <leader>gr :Gread<CR>
+map <leader>gs :Git status<CR>
+map <leader>gd :Gvdiff<CR>
+map <leader>gc :Git commit<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Quickstart for tagbar
-  " directory for created ctags
-  let Tlist_Ctags_Cmd = "/usr/bin/ctags"
-  " tagbar width
-  let Tlist_WinWidth  = 50
-  " show tagbar
-  map <F8> :TagbarToggle<CR>
-  " create ycm config file"
-  map <F3> :YcmGenerateConfig --compiler clang .<CR>
+" Tagbar configuration
+let Tlist_Ctags_Cmd = "/usr/bin/ctags"
+let Tlist_WinWidth  = 50
+map <F8> :TagbarToggle<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " NERDTree settings
-  map <C-n> :NERDTreeToggle<CR>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <C-n> :NERDTreeToggle<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Syntastic options
+" Syntastic options
   set statusline+=%#warningmsg#
   set statusline+=%{SyntasticStatuslineFlag()}
   set statusline+=%*
@@ -177,8 +141,6 @@ set tags=tags;
   let g:syntastic_always_populate_loc_list = 1
   let g:syntastic_auto_loc_list = 1
   let g:syntastic_check_on_wq = 0
-
-  "let g:syntastic_check_on_open=1 "Slow opening
   let g:syntastic_enable_signs         = 1
   let g:syntastic_cpp_check_header     = 1
   let g:syntastic_cpp_compiler         = 'gcc'
@@ -187,20 +149,13 @@ set tags=tags;
   let g:syntastic_cpp_checkers         = ['gcc']
   let g:syntastic_cuda_checkers        = ['nvcc']
   let g:syntastic_cpp_config_file      = '.syntastic_cpp_config'
-  "let g:syntastic_cpp_flags = ['-I./lib/spdlog/ -I./lib/spdlog/include -I./lib/spdlog/include/spdlog']
   let g:syntastic_cpp_include_dirs = [ 'includes', '../include', '../../include', 'includes/*/', '../include/*/', '../../include/*/', 'external/slog/include']
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set wildmenu
 set wildmode=list:longest,full
 
-"set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
-"
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Plugin 'rickhowe/diffchar.vim'
-   let g:DiffUnit = 'Char'
+" diffchar.vim settings
+let g:DiffUnit = 'Char'
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""Plugin 'vim-airline/vim-airline'
+" vim-airline settings
 let g:airline_powerline_fonts = 0
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

@@ -35,15 +35,6 @@ vim.opt.colorcolumn = "80" -- highlight column 80
 vim.opt.spell = true -- Enable spell checking
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-N>', { noremap = true, silent = true }) -- Map Esc in terminal mode to exit to normal mode
 
---vim.api.nvim_create_autocmd("BufEnter", {
---  callback = function()
---    vim.lsp.start({
---      name = "clangd",
---      cmd = {"clangd"},
---      root_dir = vim.fn.getcwd(),
---    })
---  end,
---})
 -- Function to map keybindings
 local function on_attach(_, bufnr)
   -- Create a local function to simplify mapping keybindings
@@ -64,7 +55,8 @@ local function on_attach(_, bufnr)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 end
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+
+-- File type autocmds
   pattern = {"*.frag", "*.vert"},
   callback = function()
     vim.bo.filetype = "glsl"
@@ -76,11 +68,9 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
         vim.bo.filetype = "python"
     end,
 })
-
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    -- add your plugins here
     { "rebelot/kanagawa.nvim", -- my custom colorscheme
       lazy = false, -- allways load this plugin
       priority = 1000, -- load this plugin before all others
@@ -101,9 +91,8 @@ require("lazy").setup({
       branch = "v3.x",
       dependencies = {
         "nvim-lua/plenary.nvim",
-        "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+        "nvim-tree/nvim-web-devicons",
         "MunifTanjim/nui.nvim",
-        -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
       },
       config = function()
         vim.api.nvim_set_keymap('n', '<C-n>', ':Neotree toggle<CR>', { noremap = true, silent = true })
@@ -119,11 +108,6 @@ require("lazy").setup({
         local conf = {
           openai_api_key = os.getenv("OPENAI_API_KEY"),
           providers = {
-            openai = {
-              disable = true,
-              endpoint = "https://api.openai.com/v1/chat/completions",
-              -- secret = os.getenv("OPENAI_API_KEY"),
-            },
             ollama = {
               endpoint = "http://localhost:11434/v1/chat/completions",
             },
@@ -144,7 +128,6 @@ require("lazy").setup({
           },
         }
         require("gp").setup(conf)
-            -- Setup shortcuts here (see Usage > Shortcuts in the Documentation/Readme)
         end,
     },
     { "godlygeek/tabular"},
@@ -187,10 +170,6 @@ require("lazy").setup({
     { "lervag/vimtex",
       lazy = true,
       ft = "tex",
-      init = function()
-        -- VimTeX configuration goes here, e.g.
-        -- vim.g.vimtex_view_method = "zathura"
-      end,
     },
     { "majutsushi/tagbar",
       lazy = true,
@@ -201,12 +180,7 @@ require("lazy").setup({
       end,
     },
     { "vim-airline/vim-airline", },
-    { "neovim/nvim-lspconfig",
-      --config = function()
-      --  local lspconfig = require("lspconfig")
-      --  lspconfig.clangd.setup({})
-      --end,
-    },
+    { "neovim/nvim-lspconfig", },
     { "williamboman/mason.nvim",
       config = function()
         require("mason").setup()
