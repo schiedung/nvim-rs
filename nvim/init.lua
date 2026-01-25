@@ -57,6 +57,7 @@ local function on_attach(_, bufnr)
 end
 
 -- File type autocmds
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
   pattern = {"*.frag", "*.vert"},
   callback = function()
     vim.bo.filetype = "glsl"
@@ -72,7 +73,7 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 require("lazy").setup({
   spec = {
     { "rebelot/kanagawa.nvim", -- my custom colorscheme
-      lazy = false, -- allways load this plugin
+      lazy = false, -- always load this plugin
       priority = 1000, -- load this plugin before all others
       config = function()
         vim.cmd([[colorscheme kanagawa]])
