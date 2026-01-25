@@ -111,7 +111,7 @@ require("lazy").setup({
       end,
     },
     { "github/copilot.vim",
-      enabled = false,
+      enabled = true,
     },
     {
       "robitx/gp.nvim",
