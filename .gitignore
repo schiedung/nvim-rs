@@ -1,0 +1,56 @@
+# Vim/Neovim runtime files
+*.swp
+*.swo
+*.swn
+*~
+.netrwhist
+
+# Plugin directories (these should not be in version control)
+bundle/
+plugged/
+.vim/bundle/
+.config/nvim/bundle/
+
+# Lazy.nvim data directory (managed by lazy.nvim)
+.config/nvim/lazy/
+
+# Undo history
+.config/nvim/undo/
+.vim/undo/
+
+# Backup files
+.config/nvim/backup/
+.vim/backup/
+
+# Temporary files
+tmp/
+*.tmp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE/Editor specific
+.vscode/
+.idea/
+*.sublime-*
+
+# Log files
+*.log
+
+# Compiled Lua files
+*.luac
+
+# Mason installations (LSP/DAP/linter/formatter packages)
+mason/
+.local/share/nvim/mason/
+
+# Tag files
+tags
+tags.lock
+tags.temp
+
+# Local configuration (user-specific settings)
+local.vim
+local.lua
