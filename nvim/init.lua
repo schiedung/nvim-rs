@@ -19,8 +19,8 @@ vim.opt.rtp:prepend(lazypath)
 -- Make sure to setup `mapleader` and `maplocalleader` before
 -- loading lazy.nvim so that mappings are correct.
 -- This is also a good place to setup other settings (vim.opt)
---vim.g.mapleader = " "
---vim.g.maplocalleader = "\\"
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
 vim.opt.number = true -- Add line numbers
 vim.opt.relativenumber = true  -- Set relative numbers
@@ -35,15 +35,6 @@ vim.opt.colorcolumn = "80" -- highlight column 80
 vim.opt.spell = true -- Enable spell checking
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-N>', { noremap = true, silent = true }) -- Map Esc in terminal mode to exit to normal mode
 
---vim.api.nvim_create_autocmd("BufEnter", {
---  callback = function()
---    vim.lsp.start({
---      name = "clangd",
---      cmd = {"clangd"},
---      root_dir = vim.fn.getcwd(),
---    })
---  end,
---})
 -- Function to map keybindings
 local function on_attach(_, bufnr)
   -- Create a local function to simplify mapping keybindings
@@ -59,11 +50,13 @@ local function on_attach(_, bufnr)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 end
+
+-- File type autocmds
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
   pattern = {"*.frag", "*.vert"},
   callback = function()
@@ -76,13 +69,11 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
         vim.bo.filetype = "python"
     end,
 })
-
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    -- add your plugins here
     { "rebelot/kanagawa.nvim", -- my custom colorscheme
-      lazy = false, -- allways load this plugin
+      lazy = false, -- always load this plugin
       priority = 1000, -- load this plugin before all others
       config = function()
         vim.cmd([[colorscheme kanagawa]])
@@ -101,9 +92,8 @@ require("lazy").setup({
       branch = "v3.x",
       dependencies = {
         "nvim-lua/plenary.nvim",
-        "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+        "nvim-tree/nvim-web-devicons",
         "MunifTanjim/nui.nvim",
-        -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
       },
       config = function()
         vim.api.nvim_set_keymap('n', '<C-n>', ':Neotree toggle<CR>', { noremap = true, silent = true })
@@ -121,11 +111,6 @@ require("lazy").setup({
         local conf = {
           openai_api_key = os.getenv("OPENAI_API_KEY"),
           providers = {
-            openai = {
-              disable = true,
-              endpoint = "https://api.openai.com/v1/chat/completions",
-              -- secret = os.getenv("OPENAI_API_KEY"),
-            },
             ollama = {
               endpoint = "http://localhost:11434/v1/chat/completions",
             },
@@ -141,12 +126,11 @@ require("lazy").setup({
               chat = true,
               command = true,
               model = { model = "codellama:latest" },
-              system_prompt = "Please imitate master Joda from Star Wars when aswering.",
+              system_prompt = "Please imitate master Yoda from Star Wars when answering.",
             },
           },
         }
         require("gp").setup(conf)
-            -- Setup shortcuts here (see Usage > Shortcuts in the Documentation/Readme)
         end,
     },
     { "godlygeek/tabular"},
@@ -189,10 +173,6 @@ require("lazy").setup({
     { "lervag/vimtex",
       lazy = true,
       ft = "tex",
-      init = function()
-        -- VimTeX configuration goes here, e.g.
-        -- vim.g.vimtex_view_method = "zathura"
-      end,
     },
     { "majutsushi/tagbar",
       lazy = true,
@@ -203,12 +183,7 @@ require("lazy").setup({
       end,
     },
     { "vim-airline/vim-airline", },
-    { "neovim/nvim-lspconfig",
-      --config = function()
-      --  local lspconfig = require("lspconfig")
-      --  lspconfig.clangd.setup({})
-      --end,
-    },
+    { "neovim/nvim-lspconfig", },
     { "williamboman/mason.nvim",
       config = function()
         require("mason").setup()
@@ -235,10 +210,10 @@ require("lazy").setup({
                   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
                   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
                   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
                 end,
               flags = {
                 debounce_text_changes = 150,
