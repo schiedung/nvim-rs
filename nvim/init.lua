@@ -32,6 +32,9 @@ vim.opt.showbreak = "↪   " -- indicate line wrap
 vim.opt.colorcolumn = "80" -- highlight column 80
 vim.opt.spell = true -- Enable spell checking
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-N>', { noremap = true, silent = true }) -- Map Esc in terminal mode to exit to normal mode
+vim.keymap.set('n', '<leader>ln', function()
+  vim.opt.relativenumber = not vim.o.relativenumber
+end, { desc = "Toggle relative line numbers" })
 
 -- Function to map keybindings
 local function on_attach(_, bufnr)
@@ -99,7 +102,7 @@ require("lazy").setup({
       end,
     },
     { "github/copilot.vim",
-      enabled = false,
+      enabled = true,
     },
     {
       "robitx/gp.nvim",
