@@ -31,31 +31,47 @@ vim.opt.wrap = true -- Wrap lines
 vim.opt.showbreak = "↪   " -- indicate line wrap
 vim.opt.colorcolumn = "80" -- highlight column 80
 vim.opt.spell = true -- Enable spell checking
-vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-N>', { noremap = true, silent = true }) -- Map Esc in terminal mode to exit to normal mode
+-- Map Esc in terminal mode to exit to normal mode
+vim.keymap.set('t', '<Esc>', '<C-\\><C-N>', { silent = true, desc = "Terminal: exit to normal mode" })
 vim.keymap.set('n', '<leader>ln', function()
   vim.opt.relativenumber = not vim.o.relativenumber
 end, { desc = "Toggle relative line numbers" })
 
--- Function to map keybindings
-local function on_attach(_, bufnr)
-  -- Create a local function to simplify mapping keybindings
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local opts = { noremap=true, silent=true }
+-- Regenerate ctags for the current directory. Uses `ctags` from PATH rather than
+-- a hardcoded /usr/bin so it also works on Homebrew/Nix/snap installs.
+vim.keymap.set('n', '<F4>',
+  ':!ctags -R --exclude=.git --exclude=documentation --c++-kinds=+p '
+  .. '--langmap=c++:+.cu --fields=+liaS --extra=+q .<CR>',
+  { silent = true, desc = "Regenerate ctags" })
 
-  -- Mappings.
-  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+-- Buffer-local LSP keybindings.
+-- NOTE: Neovim 0.11+ already provides grr (references), grn (rename), gra (code
+-- action), gri (implementation), grt (type definition) and K (hover) by default,
+-- so those are deliberately NOT redefined here. Mapping bare `gr` in particular
+-- would put a completed match on the `gr*` prefix and make every `gr` press wait
+-- out 'timeoutlen'. Only mappings the defaults do not cover live below.
+local function on_attach(_, bufnr)
+  local function map(lhs, rhs, desc)
+    vim.keymap.set('n', lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
+  end
+
+  map('gd', vim.lsp.buf.definition, 'LSP: go to definition')
+  map('gD', vim.lsp.buf.declaration, 'LSP: go to declaration')
+  map('gi', vim.lsp.buf.implementation, 'LSP: go to implementation')
+  map('<C-k>', vim.lsp.buf.signature_help, 'LSP: signature help')
+  map('[d', function() vim.diagnostic.jump({ count = -1, float = true }) end, 'Previous diagnostic')
+  map(']d', function() vim.diagnostic.jump({ count = 1, float = true }) end, 'Next diagnostic')
+  map('<space>e', vim.diagnostic.open_float, 'Show diagnostic in a float')
+  map('<space>q', vim.diagnostic.setloclist, 'Diagnostics to location list')
 end
+
+-- Apply the mappings above whenever a language server attaches to a buffer.
+-- Servers themselves are enabled in the nvim-lspconfig spec below.
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    on_attach(vim.lsp.get_client_by_id(args.data.client_id), args.buf)
+  end,
+})
 
 -- File type autocmds
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
@@ -80,34 +96,41 @@ require("lazy").setup({
         vim.cmd([[colorscheme kanagawa]])
       end,
     },
-    { "ellisonleao/gruvbox.nvim", -- old colorscheme
-      enabled = false,
-      lazy = false,
-      config = function()
-        vim.cmd("colorscheme gruvbox")
-      end,
-    },
     { "nvim-neo-tree/neo-tree.nvim", -- file tree plugin
-      lazy = true, -- load this plugin lazily
-      keys = { "<C-n>", "<leader>n", "<cmd>Neotree<CR>" }, -- key bindings to load plugin
+      -- The keys below both lazy-load the plugin and are the actual mappings,
+      -- so there is a single source of truth. A bare string here would be a
+      -- load trigger only, which is why "<cmd>Neotree<CR>" used to sit in this
+      -- list as a mapping for a key sequence nobody can type.
+      cmd = "Neotree",
+      keys = {
+        { "<C-n>", "<cmd>Neotree toggle<CR>", desc = "Toggle file tree" },
+        { "<leader>n", "<cmd>Neotree toggle<CR>", desc = "Toggle file tree" },
+      },
       branch = "v3.x",
       dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-tree/nvim-web-devicons",
         "MunifTanjim/nui.nvim",
       },
-      config = function()
-        vim.api.nvim_set_keymap('n', '<C-n>', ':Neotree toggle<CR>', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('n', '<leader>n', ':Neotree toggle<CR>', { noremap = true, silent = true })
-      end,
     },
     { "github/copilot.vim",
       enabled = true,
     },
     {
       "robitx/gp.nvim",
-      enabled = true,
-      lazy = true,
+      -- NOTE: must have a load trigger. With a bare `lazy = true` and nothing
+      -- requiring the module, setup() never ran and no :Gp* command existed.
+      -- `cmd` makes lazy create these as stubs at startup, so they are available
+      -- immediately and load the plugin on first use. VeryLazy is kept as a
+      -- belt-and-braces trigger so the full generated command set registers even
+      -- if one is missing from the list below.
+      event = "VeryLazy",
+      cmd = {
+        "GpAgent", "GpAppend", "GpChatDelete", "GpChatFinder", "GpChatLast",
+        "GpChatNew", "GpChatPaste", "GpChatRespond", "GpChatToggle", "GpContext",
+        "GpEnew", "GpNew", "GpNextAgent", "GpPopup", "GpPrepend", "GpRewrite",
+        "GpSelectAgent", "GpStop", "GpTabnew", "GpVnew",
+      },
       config = function()
         local conf = {
           openai_api_key = os.getenv("OPENAI_API_KEY"),
@@ -122,7 +145,7 @@ require("lazy").setup({
               disable = true,
             },
             {
-              name = "Joda",
+              name = "Yoda",
               provider = "ollama",
               chat = true,
               command = true,
@@ -140,16 +163,30 @@ require("lazy").setup({
        opts = { disable_mouse = false}
     },
     {"tpope/vim-fugitive", -- premier git plugin
+      -- Deliberately NOT lazy-loaded: fugitive provides commands (:Git, :Gblame,
+      -- :Gedit, ...) and fugitive:// buffer handling well beyond the five keys
+      -- mapped here, so gating it on those keys would hide most of the plugin.
       config = function()
-        vim.api.nvim_set_keymap('n', '<leader>gw', ':Gwrite<CR>', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('n', '<leader>gr', ':Gread<CR>', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('n', '<leader>gs', ':Git status<CR>', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('n', '<leader>gd', ':Gvdiff<CR>', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('n', '<leader>gc', ':Git commit<CR>', { noremap = true, silent = true })
+        -- Commands spelled in full. `:Gvdiff` does still work as an unambiguous
+        -- abbreviation of `:Gvdiffsplit`, but that breaks silently the day
+        -- fugitive adds any other Gvdiff* command.
+        local map = function(lhs, rhs, desc)
+          vim.keymap.set('n', lhs, rhs, { silent = true, desc = desc })
+        end
+        map('<leader>gw', '<cmd>Gwrite<CR>', 'Git: stage current file')
+        map('<leader>gr', '<cmd>Gread<CR>', 'Git: checkout current file')
+        map('<leader>gs', '<cmd>Git status<CR>', 'Git: status')
+        map('<leader>gd', '<cmd>Gvdiffsplit<CR>', 'Git: diff (vertical split)')
+        map('<leader>gc', '<cmd>Git commit<CR>', 'Git: commit')
       end,
     },
     { "nvim-treesitter/nvim-treesitter", -- syntax highlighting
-      enabled = true,
+      -- Pin to master: this config uses the classic `nvim-treesitter.configs`
+      -- API, which does not exist on the `main` branch. Upstream intends to make
+      -- `main` the default, at which point an unpinned fresh clone would fail at
+      -- startup. Migrating to the main API is the eventual fix.
+      branch = "master",
+      build = ":TSUpdate",
       config = function()
         require'nvim-treesitter.configs'.setup {
           ensure_installed = {
@@ -164,7 +201,9 @@ require("lazy").setup({
             "yaml",
             "html"},
           highlight = { enable = true, },
-          fold = { enable = true },
+          -- NOTE: there is no `fold` module in nvim-treesitter (only highlight,
+          -- incremental_selection and indent), so a `fold = {...}` key here is
+          -- silently discarded. Folding comes from the three options below.
         }
         vim.opt.foldmethod = "expr"
         vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
@@ -176,52 +215,23 @@ require("lazy").setup({
       ft = "tex",
     },
     { "majutsushi/tagbar",
-      lazy = true,
-      keys = { "<F4>", "<F8>" },
-      config = function()
-        vim.api.nvim_set_keymap('n', '<F4>', ':!/usr/bin/ctags -R --exclude=.git --exclude=documentation --c++-kinds=+p --langmap=c++:+.cu --fields=+liaS --extra=+q .<CR>', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('n', '<F8>', ':TagbarToggle<CR>', { noremap = true, silent = true })
-      end,
+      -- Only <F8> needs tagbar; <F4> is a plain ctags shell command and is
+      -- mapped globally near the top of this file instead.
+      cmd = { "TagbarToggle", "TagbarOpen", "TagbarClose" },
+      keys = {
+        { "<F8>", "<cmd>TagbarToggle<CR>", desc = "Toggle tagbar" },
+      },
     },
     { "vim-airline/vim-airline", },
-    { "neovim/nvim-lspconfig", },
+    { "neovim/nvim-lspconfig", -- ships lsp/<server>.lua definitions for vim.lsp.enable
+      dependencies = { "williamboman/mason.nvim" }, -- mason puts its bin dir on PATH first
+      config = function()
+        vim.lsp.enable({ "clangd", "lua_ls" })
+      end,
+    },
     { "williamboman/mason.nvim",
       config = function()
         require("mason").setup()
-      end,
-    },
-    { "williamboman/mason-lspconfig.nvim",
-      enabled = false, -- TODO breaking update
-      dependencies = { "williamboman/mason.nvim" },
-      config = function()
-        require("mason-lspconfig").setup({
-            ensure_installed = { "lua_ls", "clangd"},
-        })
-        require("mason-lspconfig").setup_handlers({
-          function(server_name)
-            require("lspconfig")[server_name].setup({
-              on_attach = function (_, bufnr)
-                  local opts = {noremap=true, silent=true }
-                  --vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', vim.tbl_extend('force', opts, { desc = "Jump to definition" }))
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', vim.tbl_extend('force', opts, { desc = "Jump to definition" }))
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', vim.tbl_extend('force', opts, { desc = "Jump to declatation" }))
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-                  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-                end,
-              flags = {
-                debounce_text_changes = 150,
-              },
-            })
-          end,
-        })
       end,
     },
     { "karb94/neoscroll.nvim",
@@ -247,94 +257,37 @@ require("lazy").setup({
       },
     },
     { "lukas-reineke/indent-blankline.nvim", --  adds indentation guides to Neovim
-      enabled = true,
-      lazy = true,
+      -- Needs a trigger: with a bare `lazy = true` and nothing requiring "ibl",
+      -- this never loaded and the indent guides never rendered.
+      event = { "BufReadPost", "BufNewFile" },
       dependencies = { "nvim-treesitter/nvim-treesitter" },
       main = "ibl",
       ---@module "ibl"
       ---@type ibl.config
       opts = {},
     },
-    { "hrsh7th/nvim-cmp",
-      enabled = false, -- TODO breaks lspconfig
-      -- TODO add lazy loading
-      dependencies = {
-        'neovim/nvim-lspconfig',
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-buffer',
-        'hrsh7th/cmp-path',
-        'hrsh7th/cmp-cmdline',
-        'hrsh7th/nvim-cmp'
-      },
-      config = function()
-        require'cmp'.setup {
-          snippet = {
-            -- REQUIRED - you must specify a snippet engine
-            expand = function(args)
-              vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
-            end,
-          },
-          window = {
-            completion = require('cmp').config.window.bordered(),
-            documentation = require('cmp').config.window.bordered(),
-          },
-          mapping = require('cmp').mapping.preset.insert({
-            ['<C-d>'] = require('cmp').mapping.scroll_docs(-4),
-            ['<C-f>'] = require('cmp').mapping.scroll_docs(4),
-            ['<C-Space>'] = require('cmp').mapping.complete(),
-            ['<C-e>'] = require('cmp').mapping.close(),
-            ['<CR>'] = require('cmp').mapping.confirm({ select = true }),
-          }),
-          sources = {
-            { name = 'nvim_lsp' },
-            { name = 'buffer' },
-          },
-          -- Use buffer source for `/` and `?` code completion (if you enabled `native_menu`, this won't work anymore).
-          require('cmp').setup.cmdline({ '/', '?' }, {
-            mapping = require('cmp').mapping.preset.cmdline(),
-            sources = {
-              { name = 'buffer' }
-            }
-          }),
-          -- Use cmdline & path source for ':' code completion (if you enabled `native_menu`, this won't work anymore).
-          require('cmp').setup.cmdline(':', {
-            mapping = require('cmp').mapping.preset.cmdline(),
-            sources = require('cmp').config.sources({
-              { name = 'path' }
-            }, {
-              { name = 'cmdline' }
-            }),
-            matching = { disallow_symbol_nonprefix_matching = false }
-          }),
-          -- Set up lspconfig.
-          require('lspconfig')['clangd'].setup {
-            capabilities = require('cmp_nvim_lsp').default_capabilities(),
-          },
-          require('lspconfig')['lua_ls'].setup {
-            capabilities = require('cmp_nvim_lsp').default_capabilities(),
-          }
-        }
-      end,
-    },
     {'nvim-telescope/telescope.nvim',
-      enabled = true,
+      cmd = "Telescope",
       dependencies = { 'nvim-lua/plenary.nvim' },
-      config = function()
-        local builtin = require('telescope.builtin')
-        vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
-        vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
-        vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
-        vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
-      end,
+      keys = {
+        { '<leader>ff', function() require('telescope.builtin').find_files() end, desc = 'Telescope find files' },
+        { '<leader>fg', function() require('telescope.builtin').live_grep() end, desc = 'Telescope live grep' },
+        { '<leader>fb', function() require('telescope.builtin').buffers() end, desc = 'Telescope buffers' },
+        { '<leader>fh', function() require('telescope.builtin').help_tags() end, desc = 'Telescope help tags' },
+      },
     },
   },
 
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "habamax" } },
-  -- automatically check for plugin updates
+  -- Check for plugin updates and notify; updates are applied by :Lazy update.
+  -- NOTE: `auto_install` is NOT a valid checker option (the real ones are
+  -- enabled/concurrency/notify/frequency/check_pinned) and was silently ignored.
   checker = {
     enabled = true,
-    auto_install = true,
   },
+  -- No plugin here needs luarocks; disabling it keeps :checkhealth clean instead
+  -- of reporting a hererocks error for a feature we never use.
+  rocks = { enabled = false },
 })
