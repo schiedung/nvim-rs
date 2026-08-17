@@ -11,7 +11,7 @@ Plugin 'VundleVim/Vundle.vim'
 " My Bundles here:
 "Plugin 'chriskempson/base16-vim'
 "Plugin 'jcf/vim-latex' "NOTE: painfully slow
-"Plugin 'majutsuxhi/tagbar' " Handelt with git submodule
+"Plugin 'majutsushi/tagbar' " Handled with git submodule
 "Plugin 'octol/vim-cpp-enhanced-highlight'
 "Plugin 'rdnetto/YCM-Generator'
 "Plugin 'ycm-core/YouCompleteMe'
@@ -118,7 +118,9 @@ endif
 " tag-settings
 set tags=tags;
 " create tags for current directory (recursive)
- map <F4> :!/usr/bin/ctags -R --exclude=.git --exclude=documentation --c++-kinds=+p --langmap=c++:+.cu --fields=+liaS --extra=+q .<CR>
+" Uses ctags from PATH rather than a hardcoded /usr/bin, so it also works on
+" Homebrew/Nix/snap installs.
+ map <F4> :!ctags -R --exclude=.git --exclude=documentation --c++-kinds=+p --langmap=c++:+.cu --fields=+liaS --extra=+q .<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -128,23 +130,23 @@ set tags=tags;
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Keybindings for fugitive
+  " Commands are spelled in full: :Gstatus and :Gcommit were removed from
+  " fugitive, and :Gdiff only still works as an abbreviation of :Gdiffsplit.
   map <leader>gw :Gwrite<CR>
   map <leader>gr :Gread<CR>
-  map <leader>gs :Gstatus<CR>
-  map <leader>gd :Gdiff<CR>
-  map <leader>gc :Gcommit<CR>
+  map <leader>gs :Git status<CR>
+  map <leader>gd :Gdiffsplit<CR>
+  map <leader>gc :Git commit<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Quickstart for tagbar
   " directory for created ctags
-  let Tlist_Ctags_Cmd = "/usr/bin/ctags"
+  let Tlist_Ctags_Cmd = "ctags"
   " tagbar width
   let Tlist_WinWidth  = 50
   " show tagbar
   map <F8> :TagbarToggle<CR>
-  " create ycm config file"
-  map <F3> :YcmGenerateConfig --compiler clang .<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -195,9 +197,4 @@ set wildmode=list:longest,full
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 ""Plugin 'vim-airline/vim-airline'
 let g:airline_powerline_fonts = 0
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"tabac/vim-hardtime settings
-let g:hardtime_default_on = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
