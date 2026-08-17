@@ -2,20 +2,28 @@
 
 ## Description
 
-This repository contains personal Neovim and Vim configuration files. It provides two different Neovim configurations:
+This repository contains personal Neovim and Vim configuration files:
 
-1. **init.vim** (Vundle-based): Traditional Vim configuration using Vundle plugin manager
-2. **init.lua** (Lazy.nvim-based): Modern Lua-based configuration using lazy.nvim plugin manager
+1. **nvim/init.lua** (lazy.nvim-based): the Neovim configuration
+2. **vim/vimrc** (Vundle-based): a legacy configuration for plain Vim
 
 The configurations are optimized for C/C++/CUDA development with support for various other languages.
+
+> **Note**: the Vundle-based Neovim configuration (`nvim/init.vim`) has been removed and
+> is no longer supported. `init.lua` is the only Neovim configuration.
 
 ## Pre-requisites
 
 ### Linux
 
 ```bash
-sudo apt-get install -y neovim git luarocks
+sudo apt-get install -y neovim git
 ```
+
+**Neovim 0.11 or newer is required** — `init.lua` uses `vim.lsp.enable` and
+`vim.diagnostic.jump`, which do not exist on 0.9/0.10. Note that `apt-get install neovim`
+ships an older release on Debian/Ubuntu; use the AppImage, the unstable PPA, or a
+release tarball if your distribution lags behind.
 
 For full functionality, also install:
 ```bash
@@ -32,25 +40,9 @@ Neovim and Vim configuration files will be installed if Neovim or Vim is
 installed on the system. The configuration files will be installed in the user's
 home directory.
 
-### Option 1: Complete Installation (Vim + Neovim with init.vim)
+### Neovim (init.lua with lazy.nvim)
 
-This installs both Vim and Neovim configurations using the traditional Vundle plugin manager.
-
-#### Linux
-
-```bash
-./install.sh
-```
-
-#### Windows
-
-```bash
-./install.bat
-```
-
-### Option 2: Modern Neovim Setup (init.lua with lazy.nvim)
-
-This installs only the modern Lua-based Neovim configuration with lazy.nvim.
+This installs the Neovim configuration.
 
 #### Linux
 
@@ -64,7 +56,20 @@ This installs only the modern Lua-based Neovim configuration with lazy.nvim.
 ./setup-nvim.bat
 ```
 
-**Note**: When using init.lua, plugins will be automatically installed on the first launch of Neovim.
+**Note**: Plugins are installed automatically on the first launch of Neovim.
+
+### Vim (legacy, Vundle)
+
+`install.sh` installs the plain-Vim configuration (`vim/vimrc`) with Vundle. It also
+installs the Neovim helper scripts (SVN diff/merge wrappers), the Nerd Font, and sets
+`git core.editor` — but it does **not** install a Neovim configuration; use
+`setup-nvim.sh` for that.
+
+```bash
+./install.sh
+```
+
+There is currently no Windows equivalent of `install.sh`.
 
 ## Uninstallation
 
@@ -84,7 +89,7 @@ To remove all Vim and Neovim configurations:
 
 ## Plugins
 
-### Plugins in init.vim (Vundle-based)
+### Plugins in vim/vimrc (Vundle-based, legacy Vim)
 
 | Plugin                                                                                  | Functionality                                            |
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -92,28 +97,25 @@ To remove all Vim and Neovim configurations:
 | [altercation/vim-colors-solarized](https://github.com/altercation/vim-colors-solarized) | Solarized color scheme                                   |
 | [github/copilot.vim](https://github.com/github/copilot.vim)                             | GitHub Copilot AI pair programmer                        |
 | [godlygeek/tabular](https://github.com/godlygeek/tabular)                               | Text alignment and formatting                            |
-| [iamcco/markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)         | Preview markdown files in browser                        |
 | [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)                                     | Fuzzy file finder                                        |
 | [majutsushi/tagbar](https://github.com/majutsushi/tagbar)                               | Display tags in a window, ordered by scope               |
 | [morhetz/gruvbox](https://github.com/morhetz/gruvbox)                                   | Gruvbox color scheme                                     |
 | [petRUShka/vim-sage](https://github.com/petRUShka/vim-sage)                             | SageMath syntax support                                  |
-| [psliwka/vim-smoothie](https://github.com/psliwka/vim-smoothie)                         | Smooth scrolling for Ctrl-D and Ctrl-U                   |
 | [rhysd/vim-clang-format](https://github.com/rhysd/vim-clang-format)                     | Clang-format integration                                 |
 | [rickhowe/diffchar.vim](https://github.com/rickhowe/diffchar.vim)                       | Character-level diff highlighting                        |
-| [ryanoasis/vim-devicons](https://github.com/ryanoasis/vim-devicons)                     | File type icons                                          |
 | [scrooloose/nerdtree](https://github.com/scrooloose/nerdtree)                           | File system explorer                                     |
 | [scrooloose/syntastic](https://github.com/scrooloose/syntastic)                         | Syntax checking                                          |
 | [takac/vim-hardtime](https://github.com/takac/vim-hardtime)                             | Break bad Vim habits by discouraging repeated keys       |
 | [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)                             | Git wrapper for Vim                                      |
 | [vim-airline/vim-airline](https://github.com/vim-airline/vim-airline)                   | Lean & mean status/tabline                               |
 
-### Plugins in init.lua (lazy.nvim-based)
+### Plugins in init.lua (lazy.nvim-based, Neovim)
 
 | Plugin                                                                                  | Functionality                                            |
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| [rebelot/kanagawa.nvim](https://github.com/rebelot/kanagawa.nvim)                       | Kanagawa color scheme (default)                          |
-| [ellisonleao/gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim)                 | Gruvbox color scheme (alternative)                       |
+| [rebelot/kanagawa.nvim](https://github.com/rebelot/kanagawa.nvim)                       | Kanagawa color scheme                                    |
 | [nvim-neo-tree/neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim)           | Modern file explorer                                     |
+| [github/copilot.vim](https://github.com/github/copilot.vim)                             | GitHub Copilot AI pair programmer                        |
 | [robitx/gp.nvim](https://github.com/robitx/gp.nvim)                                     | ChatGPT/Ollama integration                               |
 | [godlygeek/tabular](https://github.com/godlygeek/tabular)                               | Text alignment and formatting                            |
 | [m4xshen/hardtime.nvim](https://github.com/m4xshen/hardtime.nvim)                       | Modern hardtime plugin                                   |
@@ -131,35 +133,57 @@ To remove all Vim and Neovim configurations:
 
 ## Key Bindings
 
-### Common Bindings (Both Configurations)
+### Common to both configurations
 
-- `<F2>` - Remove trailing whitespace and retab
 - `<F4>` - Generate ctags for current directory
 - `<F8>` - Toggle Tagbar
-- `<C-n>` - Toggle file tree (NERDTree/Neo-tree)
+- `<C-n>` - Toggle file tree (NERDTree in Vim / Neo-tree in Neovim)
 - `<leader>gw` - Git write (stage current file)
 - `<leader>gr` - Git read (checkout current file)
 - `<leader>gs` - Git status
 - `<leader>gd` - Git diff
 - `<leader>gc` - Git commit
 
-### init.lua Specific Bindings
+### Vim (vim/vimrc) only
 
-- `<leader>` - Space key (leader key)
+- `<F2>` - Remove trailing whitespace and retab
+
+### Neovim (init.lua) only
+
+**Note**: `<leader>` is the default backslash (`\`) — `mapleader` is not reassigned, so
+`<leader>ff` means `\ff`.
+
 - `<leader>ff` - Telescope find files
 - `<leader>fg` - Telescope live grep
 - `<leader>fb` - Telescope buffers
 - `<leader>fh` - Telescope help tags
 - `<leader>n` - Toggle Neo-tree
-- `gd` - Go to definition (LSP)
-- `gr` - Go to references (LSP)
-- `K` - Show hover documentation (LSP)
-- `<space>rn` - Rename symbol (LSP)
-- `<space>ca` - Code actions (LSP)
+- `<leader>ln` - Toggle relative line numbers
+- `<leader>?` - Show buffer-local keymaps (which-key)
+- `<Esc>` - Leave terminal mode
+
+LSP bindings added by this config when a language server attaches:
+
+- `gd` - Go to definition
+- `gD` - Go to declaration
+- `gi` - Go to implementation
+- `<C-k>` - Signature help
+- `[d` / `]d` - Previous / next diagnostic
+- `<space>e` - Show diagnostic in a float
+- `<space>q` - Diagnostics to location list
+
+Rename, code actions and references are **not** remapped here — Neovim 0.11+ provides
+them out of the box, and redefining them only added a keystroke delay:
+
+- `grn` - Rename symbol (built-in)
+- `gra` - Code actions (built-in)
+- `grr` - Go to references (built-in)
+- `gri` - Go to implementation (built-in)
+- `K` - Show hover documentation (built-in)
 
 ## Features
 
-### Both Configurations
+### Both configurations
 
 - Line numbers enabled
 - 80-column ruler
@@ -167,45 +191,61 @@ To remove all Vim and Neovim configurations:
 - Smart indentation (4 spaces)
 - Syntax highlighting
 - Git integration (vim-fugitive)
-- Support for CUDA files (*.cu, *.cuh)
-- SVN diff and merge tool integration
 
 ### init.lua Specific Features
 
 - Modern Lua-based configuration
-- Lazy loading plugins for faster startup
-- LSP support with clangd
-- Treesitter syntax highlighting
+- LSP support (clangd, lua_ls) via `vim.lsp.enable`
+- Treesitter syntax highlighting and folding
 - Telescope fuzzy finder
 - ChatGPT/Ollama integration for AI assistance
-- More modern plugin ecosystem
+- Lazy loading for the plugins that support it (neo-tree, telescope, tagbar, vimtex,
+  gp.nvim, indent-blankline); colorscheme, treesitter, LSP and statusline load eagerly
+
+### Vim (vim/vimrc) only
+
+- CUDA filetype detection for `*.cu` / `*.cuh` (Neovim detects these itself)
+- Syntastic syntax checking
+
+### SVN integration (shipped by `install.sh`, not part of either config)
+
+`nvim/svndiff.sh` and `nvim/svnmerger.sh` open SVN diffs and merges in Neovim.
+`install.sh` symlinks them into `~/.config/nvim/`, but SVN does not look there — you must
+register them yourself in `~/.subversion/config`:
+
+```ini
+[helpers]
+diff-cmd = /home/<user>/.config/nvim/svndiff.sh
+merge-tool-cmd = /home/<user>/.config/nvim/svnmerger.sh
+```
+
+**Note**: `purge.sh` / `purge-nvim.sh` delete `~/.config/nvim`, which removes these
+wrappers and leaves those paths dangling.
 
 ## Troubleshooting
 
 ### Plugins not loading
 
-If plugins don't load:
+**Neovim (init.lua)**: Restart Neovim; lazy.nvim auto-installs on first launch. Use
+`:Lazy` to inspect plugin state.
 
-**For init.vim**: Run `:PluginInstall` inside Vim/Neovim
+**Vim (vimrc)**: Run `:PluginInstall` inside Vim
 
-**For init.lua**: Restart Neovim; lazy.nvim will auto-install on first launch
-
-### Nerd Fonts not displaying correctly
+### Nerd Fonts not displaying correctly (Linux)
 
 1. Ensure font cache is updated: `fc-cache -fv`
 2. Set your terminal to use the installed Nerd Font
-3. For init.vim, the font is auto-downloaded during installation
+3. The font is downloaded by `install.sh`
+
+On Windows there is no font installer — download a Nerd Font manually and set it in your
+terminal. The SVN wrappers are shell scripts and are Linux/macOS only.
 
 ### LSP not working (init.lua)
 
 1. Ensure clangd is installed: `sudo apt-get install clangd`
-2. For other languages, use `:Mason` to install language servers
-
-### init.lua vs init.vim conflict
-
-Neovim loads init.lua by default if both exist. To switch:
-- Remove the unwanted config: `rm ~/.config/nvim/init.lua` or `rm ~/.config/nvim/init.vim`
-- Or use different installation scripts
+2. For other languages, use `:Mason` to install language servers, then add the server
+   name to the `vim.lsp.enable({ ... })` call in `nvim/init.lua`
+3. Check that a server attached with `:checkhealth vim.lsp`
 
 ## Contributing
 

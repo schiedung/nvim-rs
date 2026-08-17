@@ -5,26 +5,24 @@
 *~
 .netrwhist
 
-# Plugin directories (these should not be in version control)
+# Plugin directories (these should not be in version control).
+# NOTE: patterns here are deliberately unanchored (no leading path), so they
+# match at any depth. Patterns like ".config/nvim/lazy/" would be anchored to
+# the repo root and could never match anything: this repo holds nvim/ and vim/,
+# and the real plugin directories live under $HOME, not in the checkout.
 bundle/
 plugged/
-.vim/bundle/
-.config/nvim/bundle/
+lazy/
+mason/
 
-# Lazy.nvim data directory (managed by lazy.nvim)
-.config/nvim/lazy/
-
-# Undo history
-.config/nvim/undo/
-.vim/undo/
-
-# Backup files
-.config/nvim/backup/
-.vim/backup/
-
-# Temporary files
+# Undo/backup/temporary files
+undo/
+backup/
 tmp/
 *.tmp
+
+# gp.nvim context file (per-checkout, not shared)
+.gp.md
 
 # OS-specific files
 .DS_Store
@@ -42,15 +40,12 @@ Desktop.ini
 # Compiled Lua files
 *.luac
 
-# Mason installations (LSP/DAP/linter/formatter packages)
-mason/
-.local/share/nvim/mason/
-
 # Tag files
 tags
 tags.lock
 tags.temp
 
-# Local configuration (user-specific settings)
+# Local configuration (user-specific settings).
+# Neither config sources these today; kept as a convention for local overrides.
 local.vim
 local.lua

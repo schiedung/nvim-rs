@@ -11,7 +11,7 @@ If you encounter any problems or have suggestions for improvements:
 1. Check if the issue already exists in the GitHub Issues
 2. Provide clear steps to reproduce the issue
 3. Include your environment details (OS, Neovim/Vim version)
-4. Mention which configuration you're using (init.vim or init.lua)
+4. Mention which configuration you're using (Vim `vimrc` or Neovim `init.lua`)
 
 ### Submitting Changes
 
@@ -31,7 +31,7 @@ If you encounter any problems or have suggestions for improvements:
 - Remove trailing whitespace
 - Add comments for complex configurations
 
-### VimScript (init.vim)
+### VimScript (vim/vimrc)
 
 - Group related settings together
 - Use clear section headers with comment blocks
@@ -52,12 +52,13 @@ If you encounter any problems or have suggestions for improvements:
 When adding a new plugin:
 
 1. **Research**: Ensure the plugin is actively maintained
-2. **Compatibility**: Test with both Neovim versions (0.9+)
+2. **Compatibility**: Test with Neovim 0.11 or newer (`init.lua` uses `vim.lsp.enable`
+   and `vim.diagnostic.jump`, which do not exist on earlier versions)
 3. **Documentation**: Add the plugin to README.md with description
 4. **Configuration**: Add necessary configuration with comments
 5. **Performance**: Consider lazy loading when appropriate
 
-### For init.vim (Vundle)
+### For vim/vimrc (Vundle)
 
 ```vim
 " Add to the plugin list
@@ -85,7 +86,7 @@ Before submitting a pull request:
 
 1. **Test Installation**: Run installation scripts in a clean environment
 2. **Test Configurations**: 
-   - For init.vim: `nvim +PluginInstall +qall` should complete without errors
+   - For vim/vimrc: `vim +VundleInstall +qall` should complete without errors
    - For init.lua: Launch nvim and ensure lazy.nvim installs plugins correctly
 3. **Test Functionality**: Verify all keybindings and features work
 4. **Check for Errors**: Run `:checkhealth` in Neovim
@@ -122,9 +123,12 @@ When making changes:
 
 Current areas where contributions are especially welcome:
 
-- [ ] Testing mason-lspconfig integration with newer versions
-- [ ] Testing nvim-cmp integration
-- [ ] Additional language server configurations
+- [ ] A completion plugin — there is currently none. Neovim 0.11+ sets `omnifunc` to
+      `vim.lsp.omnifunc`, so `vim.lsp.completion.enable()` in the `LspAttach` callback or
+      `blink.cmp` would both work. (The old nvim-cmp block was removed; it was broken.)
+- [ ] Migrating nvim-treesitter to the `main` branch API — the config is pinned to the
+      frozen `master` branch because it uses `require'nvim-treesitter.configs'`
+- [ ] Additional language server configurations (add the name to `vim.lsp.enable`)
 - [ ] Windows-specific installation improvements
 - [ ] macOS installation scripts and documentation
 - [ ] Additional theme options
